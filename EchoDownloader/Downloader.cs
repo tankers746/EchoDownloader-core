@@ -38,7 +38,7 @@ namespace echoDownloader
         async Task DownloadEcho(Echo e)
         {
             var basePath = Path.Combine(c.downloads, e.unit);
-            var fileName = string.Format("S01E{0:00} - {1}", e.episode, e.title);
+            var fileName = string.Format("{0} - S01E{1:00} - {2}", e.unit, e.episode, e.title);
             var ext = ".mp4";
             var n = 1;
             var modifier = "";
@@ -55,11 +55,11 @@ namespace echoDownloader
             if (e.downloaded)
             {
                 c.SaveEchoFile();
-                logger.LogInformation("Succesfully downloaded \"{fileName}\"", fileName);
+                logger.LogInformation("Succesfully downloaded {fileName} to {directory}", fileName, basePath);
             }
             else {
                 if(File.Exists(filePath)) File.Delete(filePath);
-                logger.LogError("Failed to download \"{fileName}\"", fileName);
+                logger.LogError("Failed to download {fileName}", fileName);
             }
             logger.LogInformation("{queueSize} lecture(s) in the download queue.", Interlocked.Decrement(ref queueSize));
         }
@@ -69,7 +69,7 @@ namespace echoDownloader
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = false;
             startInfo.UseShellExecute = false;
-            startInfo.FileName = "ffmpeg.exe";
+            startInfo.FileName = "ffmpeg";
             startInfo.Arguments = args;
             if(!verbose)
             {
