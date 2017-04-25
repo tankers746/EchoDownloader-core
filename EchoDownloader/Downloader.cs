@@ -48,17 +48,17 @@ namespace echoDownloader
             }
             fileName = $"{ fileName }{ modifier }{ ext }";
 
-            var filePath = Path.Combine(basePath, fileName);
             Directory.CreateDirectory(basePath);
-            var args = BuildFFmpegArgs(e, filePath);
+            var args = BuildFFmpegArgs(e, fileName);
             e.downloaded = await RunFFmpeg(args);
             if (e.downloaded)
             {
+                File.Move(fileName, Path.Combine(basePath, fileName));
                 c.SaveEchoFile();
                 logger.LogInformation("Succesfully downloaded {fileName} to {directory}", fileName, basePath);
             }
             else {
-                if(File.Exists(filePath)) File.Delete(filePath);
+                if(File.Exists(fileName)) File.Delete(fileName);
                 logger.LogError("Failed to download {fileName}", fileName);
             }
             logger.LogInformation("{queueSize} lecture(s) in the download queue.", Interlocked.Decrement(ref queueSize));
