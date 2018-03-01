@@ -149,6 +149,15 @@ namespace echoDownloader
                     (e.contentDir, e.url) = await getPresentationDirsAsync(client, echoBase, uuid);
                     var doc = XDocument.Parse(await (await client.GetAsync($"{ e.contentDir }presentation.xml")).Content.ReadAsStringAsync());
                     e.venue = doc.Descendants("location").FirstOrDefault().Value;
+                    var fileUrl = e.contentDir + "audio-vga.m4v";
+                    var checkFile = new HttpRequestMessage(HttpMethod.Head, fileUrl);
+                    var res = await client.SendAsync(checkFile);
+                    if(res.IsSuccessStatusCode)
+                    {
+                        e.url = fileUrl;
+                    }
+
+
                 }
                 e.duration = presentation["durationMS"].ToObject<long>();
                 e.description = presentation["title"].ToString();
