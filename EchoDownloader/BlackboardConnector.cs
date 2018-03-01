@@ -66,9 +66,8 @@ namespace echoDownloader
                 using (HttpClient client = new HttpClient(handler))
                 {
                     //Get course memberships
-                    var membershipsJSON = await (await client.GetAsync($"{ blackboard }/learn/api/public/v1/users/userName:{ username }/courses?&limit=999")).Content.ReadAsStringAsync();
+                    var membershipsJSON = await (await client.GetAsync($"{ blackboard }/learn/api/public/v1/users/userName:{ username }/courses?&limit=200")).Content.ReadAsStringAsync();
                     dynamic memberships = JsonConvert.DeserializeObject(membershipsJSON);
-
                     //Get courses
                     foreach (var membership in memberships.results)
                     {
